@@ -39,14 +39,14 @@ const JobDetail = () => {
 
   const handleEditAndCreate = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/cv_form/${userId}`);
-      const hasCV = response.data.length > 0;
-      console.log('Has CV:', hasCV);
+      const response = await axios.get(`${BASE_URL}/cv_form/user/${userId}`);
+      const hasUserId = response.data.userId === userId;
+      console.log('Has CV:', hasUserId);
 
-      if (hasCV) {
-        navigationCVCreate.navigate('CVCreate', { startStep: 10, jobId, source: 'JobDetail' } as never);
+      if (hasUserId) {
+        navigationCVCreate.navigate('CVCreate', { startStep: 10, jobId, userId, source: 'JobDetail' } as never);
       } else {
-        navigationCVCreate.navigate('CVCreate', { startStep: 1, jobId, source: 'JobDetail' } as never);
+        navigationCVCreate.navigate('CVCreate', { startStep: 1, jobId, userId, source: 'JobDetail' } as never);
       }
     } catch (error) {
       console.error('Error checking CV:', error);
@@ -61,7 +61,7 @@ const JobDetail = () => {
     setIsModalVisible(false);
     try {
       const response = await axios.get(`${BASE_URL}/cv_form/user/${userId}`);
-      console.log('CVs:', response.data);
+      console.log('CVs:', response.data); // Log the response data
       const cv = response.data; // Assuming the first CV is the one to be used
       if (cv) {
         const cvId = cv._id;
@@ -85,9 +85,11 @@ const JobDetail = () => {
         }
       } else {
         console.error('No CV found to apply with');
+        Alert.alert('Lỗi', 'Không tìm thấy CV để ứng tuyển.');
       }
     } catch (error) {
       console.error('Error submitting application:', error);
+      Alert.alert('Lỗi', 'Có lỗi xảy ra khi ứng tuyển.');
     }
   };
 

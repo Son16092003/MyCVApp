@@ -6,6 +6,21 @@ import { Cv } from './entities/cv.entity';
 export class CvController {
   constructor(private readonly cvService: CvService) { }
 
+  @Get(':id')
+  async getCv(@Param('id') id: string): Promise<Cv> {
+    return this.cvService.getCv(id); // Corrected this line
+  }
+  
+  @Get('/user/:userId')
+  async getCvByUserId(@Param('userId') userId: string): Promise<Cv> {
+    return this.cvService.getCvByUserId(userId); // Ensure userId is treated as a string
+  }
+
+  @Get()
+  async getAllCvs(): Promise<Cv[]> {
+    return this.cvService.getAllCvs();
+  }
+
   @Post()
   async createCv(@Body() createCvDto: any): Promise<Cv> {
     console.log('Received Data:', createCvDto);
@@ -17,16 +32,7 @@ export class CvController {
     return this.cvService.updateCv(id, updateCvDto);
   }
 
-  @Get(':id')
-  async getCv(@Param('id') id: string): Promise<Cv> {
-    return this.cvService.getCv(id);
-  }
+  
 
-  @Get('/user/:userId')
-  async getCvByUserId(@Param('userId') userId: string): Promise<Cv> {
-    return this.cvService.getCvByUserId(userId);
-  }
-  async getAllCvs(): Promise<Cv[]> {
-    return this.cvService.getAllCvs();
-  }
+  
 }
