@@ -4,13 +4,13 @@ import { Cv } from './entities/cv.entity';
 
 @Controller('cv_form')
 export class CvController {
-  constructor(private readonly cvService: CvService) { }
+  constructor(private readonly cvService: CvService) {}
 
   @Get(':id')
   async getCv(@Param('id') id: string): Promise<Cv> {
     return this.cvService.getCv(id); // Corrected this line
   }
-  
+
   @Get('/user/:userId')
   async getCvByUserId(@Param('userId') userId: string): Promise<Cv> {
     return this.cvService.getCvByUserId(userId); // Ensure userId is treated as a string
@@ -28,11 +28,18 @@ export class CvController {
   }
 
   @Put(':id')
-  async updateCv(@Param('id') id: string, @Body() updateCvDto: any): Promise<Cv> {
+  async updateCv(
+    @Param('id') id: string,
+    @Body() updateCvDto: any,
+  ): Promise<Cv> {
     return this.cvService.updateCv(id, updateCvDto);
   }
 
-  
-
-  
+  @Get('/exists/:userId')
+  async checkUserExists(
+    @Param('userId') userId: string,
+  ): Promise<{ exists: boolean }> {
+    const exists = await this.cvService.checkUserExists(userId);
+    return { exists };
+  }
 }

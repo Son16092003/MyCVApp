@@ -33,5 +33,8 @@ export class CvService {
     return this.cvModel.find();
   }
 
-  
+  async checkUserExists(userId: string): Promise<boolean> {
+    const userCv = await this.cvModel.findOne({ userId: userId });
+    return !!userCv; // Trả về true nếu tìm thấy, false nếu không
+  }
 }

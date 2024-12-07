@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { BASE_URL } from '../../utils/url';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RootStackParamList = {
   Home: undefined;
@@ -16,12 +17,13 @@ const JobDetail = () => {
   const route = useRoute();
   const { jobId, disableButtons } = route.params ? route.params as { jobId: string, disableButtons: boolean } : { jobId: '', disableButtons: false };
   const [jobDetail, setJobDetail] = useState<any>(null);
+  const [CV, setCV] = useState<any>(null);
   const navigation = useNavigation();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const {userId} = route.params as {userId: string};
+  // const {userId} = route.params as {userId: string};
   // Add the new navigation prop
   const navigationCVCreate = useNavigation<NavigationProp<RootStackParamList>>();
-
+  const [userId, setUserId]= useState('');
 
   useEffect(() => {
     console.log('jobId', jobId);
@@ -29,6 +31,9 @@ const JobDetail = () => {
       try {
         const response = await axios.get(`${BASE_URL}/jobs/${jobId}`);
         setJobDetail(response.data);
+        const userInfoString = await AsyncStorage.getItem('userInfo');
+        const userInfo = userInfoString ? JSON.parse(userInfoString) : {};
+        setUserId(userInfo.data.user.id);
       } catch (error) {
         console.error('Error fetching job detail:', error);
       }
@@ -60,6 +65,7 @@ const JobDetail = () => {
   const confirmApplyNow = async () => {
     setIsModalVisible(false);
     try {
+      console.log('User ID:', userId);
       const response = await axios.get(`${BASE_URL}/cv_form/user/${userId}`);
       console.log('CVs:', response.data); // Log the response data
       const cv = response.data; // Assuming the first CV is the one to be used

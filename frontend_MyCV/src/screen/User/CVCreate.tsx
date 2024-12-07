@@ -111,7 +111,6 @@ const CVCreate = () => {
   });
 
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
   const [showWorkStartDatePicker, setShowWorkStartDatePicker] = useState(false);
@@ -196,7 +195,6 @@ const CVCreate = () => {
       const userInfo = JSON.parse(userInfoString);
       userId = userInfo.data.user.id;
     }
-    console.log('Retrieved User ID:', userId); // Add this line to log the retrieved Google ID
 
     const formattedData = {
       userId: formData.userId,
@@ -257,10 +255,7 @@ const CVCreate = () => {
       } else {
         const response = await axios.post(`${BASE_URL}/cv_form`, formattedData);
         console.log('Data successfully posted to MongoDB:', response.data);
-        console.log('Response data structure:', response.data); // Add this line to log the response data structure
-        console.log('User ID:', userId);
         Alert.alert('Thành công', 'Bạn đã tạo CV thành công!');
-        // Navigate back to the appropriate screen based on the source parameter
         if (route.params?.source === 'JobDetail') {
           navigationJobDetail.navigate('JobDetail', { jobId: route.params?.jobId });
         } else {
@@ -284,7 +279,6 @@ const CVCreate = () => {
       }
       console.log('Data that failed to post:', formattedData);
       console.log('userInfoString:', await AsyncStorage.getItem('userInfo'));
-      // Handle error, e.g., show an error message
     }
   };
 

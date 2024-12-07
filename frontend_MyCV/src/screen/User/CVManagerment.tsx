@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 import { BASE_URL } from '../../utils/url';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Iconicon from 'react-native-vector-icons/Ionicons';
+import { NavigationProp, useNavigation, useRoute } from '@react-navigation/native';
 
 type RootStackParamList = {
     CVCreate: { startStep: number };
@@ -26,13 +26,15 @@ const CVManagerment = () => {
     const [profileData, setProfileData] = useState<ProfileData | null>(null);
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const navigationMessage = useNavigation<NavigationProp<any>>();
-
+    const route = useRoute();
+    const {userId} = route.params as {userId: string};
     useEffect(() => {
         const fetchProfileData = async () => {
             try {
-                const response = await axios.get(`${BASE_URL}/cv_form`);
+                console.log('Fetching profile data for user:', userId);
+                const response = await axios.get(`${BASE_URL}/cv_form/user/${userId}`);
                 console.log('Response data:', response.data);
-                const profile = response.data[0];
+                const profile = response.data;
                 const { fullName, email, phone, address } = profile;
                 console.log('Profile data:', { fullName, email, phone, address });
                 if (fullName && email && phone && address) {
